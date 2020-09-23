@@ -10,105 +10,25 @@ request.onload = function () {
     let events =  ((false || !!document.documentMode))? JSON.parse(eventsjson): eventsjson;
     
     let content = '';
-    let fina_array =[];
-    let sortedDataevent=[];
-   
     upcommingevents = events.filter(function (event) {
-
         let when = event.When.split(",")[1];
-        if(typeof when === "undefined"){
-            when = event.When;
-        }
-        var month = getmonth(when.trim().split(" ")[0])+1;
-        if(typeof month === "undefined"){
-            month = "";
-        }
+        var month = getmonth(when.trim().split(" ")[0]);
         var day = (when.trim().split(" ")[1]);
-        if(typeof day === "undefined"){
-            day="";
-        }else{
         day = day.substring(0, day.length - 2);
-        }
-
         var eventdate = new Date();
         eventdate.setMonth(month);
         eventdate.setDate(day);
         var today = new Date();
-        sortedDataevent.push(eventdate);
-       /* 
-        sortedDataevent.sort(function (a,b) {
-            // Split the text into [ date, month ]
-           
-    
-            // Set the Date() objects to the dates of the items
-            
-    
-            /* A math operation converts a Date object to a number, so 
-               it's enough to just return date1 - date2 
-            return a - b;
-        });
- */
-
-
-
-        return sortedDataevent;
+        return eventdate >= today;
     });
 
-
-
-
-
-     upcommingevents.forEach(function(event){
-
-        let when = event.When.split(",")[1];
-        if(typeof when === "undefined"){
-            when = event.When;
-        }
-        var month = getmonth(when.trim().split(" ")[0])+1;
-        if(typeof month === "undefined"){
-            month = "";
-        }
-        var day = (when.trim().split(" ")[1]);
-        if(typeof day === "undefined"){
-            day="";
-        }else{
-           
-        day = day.substring(0, day.length - 2);
-            
-        }
-
-        var eventdate = new Date();
-        eventdate.setMonth(month);
-        eventdate.setDate(day);
-        var today = new Date();
-
-        if(eventdate > today){
-            fina_array.push(event);
-        }
-
-        
-}); 
-
-    fina_array.forEach(function(event){
-       let purpose_data='';
-        if(event.Purpose === '' || typeof event.Purpose === "undefined" ){
-
-        }
-        else{
-            purpose_data = event.Purpose;
-        }
-
+    upcommingevents.forEach(function(event){
         content = content + 
         '<div class = "col-sm-6 col-md-6 col-lg-6 col-xl-6 no-padding-left">'+
         '   <div class = "event-box">'+
-        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span><br>';
-        if(purpose_data !== ''){
-            content +='(' +purpose_data +')</h4>';
-        }
-       else{
-        content +='</h4>';
-
-       }
+        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span><br>('+
+        event.Purpose +
+        '       )</h4>';
         if(event.hasOwnProperty("image")){
             content +='<img class="title_icon" src="assets/images/'+event.image+ '"/>';
         }
