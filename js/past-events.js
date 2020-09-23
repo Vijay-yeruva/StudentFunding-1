@@ -59,9 +59,11 @@ request.onload = function () {
         content = content + 
         '<div class = "col-sm-6 col-md-6 col-lg-6 col-xl-6 no-padding-left">'+
         '   <div class = "event-box">'+
-        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span><br>('+
-        event.Purpose +
-        '       )</h4>';
+        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span>';
+        if(event.hasOwnProperty("Purpose")){
+            content += '<br>('+ event.Purpose + ')';
+        }
+        content += '</h4>';
         if(event.hasOwnProperty('image'))
         {
             content +='<img class="title_icon" src="assets/images/'+event.image+ '"/>';
