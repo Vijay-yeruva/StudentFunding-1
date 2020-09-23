@@ -11,24 +11,58 @@ request.onload = function () {
     
     let content = '';
     upcommingevents = events.filter(function (event) {
-        let when = event.When.split(",")[1];
-        var month = getmonth(when.trim().split(" ")[0]);
-        var day = (when.trim().split(" ")[1]);
-        day = day.substring(0, day.length - 2);
-        var eventdate = new Date();
-        eventdate.setMonth(month);
-        eventdate.setDate(day);
-        var today = new Date();
-        return eventdate >= today;
+        if(event.When.indexOf(",") > 0){
+            let when = event.When.split(",")[1];
+            var month = getmonth(when.trim().split(" ")[0]);
+            var day = (when.trim().split(" ")[1]);
+            day = day.substring(0, day.length - 2);
+            var eventdate = new Date();
+            eventdate.setMonth(month);
+            eventdate.setDate(day);
+            var today = new Date();
+            return eventdate >= today;
+        }
+        else
+        {
+            return true;
+        } 
+    });
+
+    upcommingevents.sort((a, b)=>{
+        if(a.When.indexOf(",") > 0 && b.When.indexOf(",") > 0){
+            //Date 1
+            let when = a.When.split(",")[1];
+            var month = getmonth(when.trim().split(" ")[0]);
+            var day = (when.trim().split(" ")[1]);
+            day = day.substring(0, day.length - 2);
+            var eventdate1 = new Date();
+            eventdate1.setMonth(month);
+            eventdate1.setDate(day);
+            // Date 2
+            when = a.When.split(",")[1];
+            month = getmonth(when.trim().split(" ")[0]);
+            day = (when.trim().split(" ")[1]);
+            day = day.substring(0, day.length - 2);
+            var eventdate2 = new Date();
+            eventdate2.setMonth(month);
+            eventdate2.setDate(day);
+            return eventdate1 <= eventdate2;
+        }
+        else
+        {
+            return true;
+        } 
     });
 
     upcommingevents.forEach(function(event){
         content = content + 
         '<div class = "col-sm-6 col-md-6 col-lg-6 col-xl-6 no-padding-left">'+
         '   <div class = "event-box">'+
-        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span><br>('+
-        event.Purpose +
-        '       )</h4>';
+        '       <button class="event-title"><h4 class="title_text"><span class="spanbold">' + event.Title +'</span>';
+        if(event.hasOwnProperty("Purpose")){
+            content += '<br>('+ event.Purpose + ')';
+        }
+        content += '</h4>';
         if(event.hasOwnProperty("image")){
             content +='<img class="title_icon" src="assets/images/'+event.image+ '"/>';
         }
